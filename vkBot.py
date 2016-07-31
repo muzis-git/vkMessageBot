@@ -86,11 +86,12 @@ if comments:
                     
                         print(json.dumps(items, indent=4, sort_keys=True, ensure_ascii=False))
 
-                        video.append(items['video'])
+                        # video.append(items['video'])
 
                         videoId=str(items['video']['owner_id'])+'_'+str(items['video']['id'])
 
                         videoidlist.append(videoId)
+
 
                     elif items['type']=='audio':
 
@@ -107,6 +108,8 @@ if comments:
 
 
 
+
+
                 # запрос в апи, на список файлов по списку айди
                 videoidStr=', '.join(videoidlist)
     
@@ -114,7 +117,7 @@ if comments:
 
                 videoFiles.pop(0) # удаляем счетчик вначале листа
 
-                post_comments['video']=videoFiles
+                post_comments['videos']=videoFiles
 
 
                 
@@ -124,9 +127,19 @@ if comments:
     
                 musicFiles=vk.getAudio(musicidStr)
 
-                post_comments['music']=musicFiles
+                post_comments['music']=[]
+
+                post_comments['music'].append(musicFiles)
 
                 post_comments['status']=1
+
+
+                # остальные параметры
+                post_comments['userId']=post['groups'][0]['screen_name']
+                post_comments['sound']='0'
+                post_comments['renderType']='clip'
+                post_comments['name']=post['groups'][0]['name'][:40]
+
 
                 mongo.update(table,post_comments)
 
@@ -135,13 +148,17 @@ if comments:
 
 
 
-    #отправляем в обработку
+    # отправляем в обработку
     
-    # runTime = bash.runCMD('./app/vkMessageApp.py '+str(job_id), False, True)
+    runTime = bash.runCMD('./app/vkMessageApp.py '+str(job_id), False, True)
 
-    # #записываем длину фильма, можно и другие параметры
-    # d = {'rendertime': round(runTime)}
-    # mongo.updateJob(job_id,d)
+    #записываем длину фильма, можно и другие параметры
+    d = {
+    '_id': str(job_id),
+    'rendertime': round(runTime)
+        }
+    mongo.update(table,d)
+
 
 
 
