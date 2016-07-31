@@ -109,22 +109,26 @@ def stepMusic(data,allParam):
     #период аудио
     print (Fore.GREEN +'---------- Audio %s -------------------' %allParam['local_output'] )
 
-    if 'music' in data:
+    music={}
 
-        music=vk.downloadMusic(data['music'],allParam)   
-        # если пользователь выбрал свою музыку
-
-        #определяем ритм 
-        audioParam = audio.userMusic(allParam, music)
-
-    else:
-
-        music={}
-        audioParam = {
+    audioParam = {
             'musicType':'noMusic',
             'audio_period':2
-
         }
+
+    if 'music' in data:
+
+        if data['music'][0]:
+
+            music=vk.downloadMusic(data['music'],allParam)   
+            # если пользователь выбрал свою музыку
+
+            #определяем ритм 
+            audioParam = audio.userMusic(allParam, music)
+
+
+
+        
 
 
     print (json.dumps(audioParam, indent=4, sort_keys=True))

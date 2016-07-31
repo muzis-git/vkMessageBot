@@ -20,6 +20,8 @@ logging.getLogger('requests').setLevel(logging.CRITICAL)
 # token_audio = getToken()
 token =''
 
+token_group= ''
+
 
 vk_method="https://api.vkontakte.ru/method/"
 
@@ -141,6 +143,44 @@ def getPostComments(post_id,count=100,group_id='-77765978'):
 	
 	return comments
 
+
+
+def createComment(post_id,message='',from_group=1,group_id='-77765978'):
+
+	# ищем комменты к посту в группе
+
+	if not post_id: return
+
+	message = 'Видео готово ...'
+
+	comments= {}
+
+
+	token = token_group
+	print token
+
+	# Адрес запроса
+	resp = requests.get(vk_method+'wall.createComment',
+	                'owner_id={}&post_id={}&message={}&from_group=0&access_token={}&v=5.53'.format(group_id,post_id,message,from_group,token))
+	
+
+	print resp	
+
+	if not 'error' in resp.json():
+		if resp.json():
+		
+			comments = resp.json()['response']
+
+			# print (Fore.YELLOW + '********** Find comments: '+str(posts[0]))
+
+			print (json.dumps(comments, indent=4, sort_keys=True, ensure_ascii=False))
+		
+	else:
+		print (Fore.RED + 'Error, No PostComments: '+post_id)
+		print (json.dumps(resp.json(), indent=4, sort_keys=True, ensure_ascii=False))
+	
+	return comments
+
 		
 
 # **********************************************************************************
@@ -164,8 +204,8 @@ if __name__ == "__main__":
 	#     	getPostComments(post_id, token)
 
 
-	getGroupPostById('935')
-	getPostComments('935')
+	# getGroupPostById('935')
+	createComment('943')
 
 
 

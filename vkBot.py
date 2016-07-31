@@ -17,7 +17,7 @@ from api import vkMessageApi as vkMessage
 
 
 owner_id='-77765978'
-post_id='935'
+post_id='943'
 
 table='jobs_flashmob'
 
@@ -83,14 +83,16 @@ if comments:
                 for items in row['attachments']:
 
                     if items['type']=='video':
+
+                        if not str(row['from_id']) == owner_id:
                     
-                        print(json.dumps(items, indent=4, sort_keys=True, ensure_ascii=False))
+                            print(json.dumps(items, indent=4, sort_keys=True, ensure_ascii=False))
 
-                        # video.append(items['video'])
+                            # video.append(items['video'])
 
-                        videoId=str(items['video']['owner_id'])+'_'+str(items['video']['id'])
+                            videoId=str(items['video']['owner_id'])+'_'+str(items['video']['id'])
 
-                        videoidlist.append(videoId)
+                            videoidlist.append(videoId)
 
 
                     elif items['type']=='audio':
